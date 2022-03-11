@@ -14,23 +14,23 @@ export interface Config {
             /** @visibility frontend */
             oauth2?: {
                 /** @visibility frontend */
-                authUrl: string; 
+                authUrl?: string; 
                 /** @visibility frontend */
-                accessToken: string;  
+                accessToken?: string;  
                 /** @visibility frontend */
-                expireDate: string; 
+                expireDate?: string; 
                 /** @visibility frontend */
-                refreshToken: string;  
+                refreshToken?: string;  
                 /** @visibility frontend */
-                tokenType: string; 
+                tokenType?: string; 
                 /** @visibility frontend */
-                clientId: string;  
+                clientId?: string;  
                 /** @visibility frontend */
-                clientSecret: string; 
+                clientSecret?: string; 
                 /** @visibility frontend */
-                tokenUrl: string;  
+                tokenUrl?: string;  
                 /** @visibility frontend */
-                scopes: string[];  
+                scopes?: string[];  
             };
         };
     }
