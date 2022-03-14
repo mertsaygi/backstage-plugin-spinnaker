@@ -67,7 +67,6 @@ export class SpinnakerApi implements Spinnaker {
       accessTokenUri: this.spinnakerConfig.getString("auth.oauth2.tokenUrl"),
       authorizationUri: this.spinnakerConfig.getString("auth.oauth2.authUrl"),
       scopes: ["profile", "email"],
-      redirectUri: url,
     });
     const token = spin.createToken(
       this.spinnakerConfig.getString("auth.oauth2.accessToken"),
