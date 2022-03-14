@@ -65,7 +65,7 @@ export class SpinnakerApi implements Spinnaker {
       redirectUri: url,
     });
     console.log(spin);
-    const token = spin.code.getToken(url);
+    const token = await spin.code.getToken(url);
     const headers = init.headers || {'Content-Type': 'application/json'};
 
     return {
