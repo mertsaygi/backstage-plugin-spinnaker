@@ -57,11 +57,11 @@ export class SpinnakerApi implements Spinnaker {
 
   private async addAuthHeaders(url: string, init: RequestInit): Promise<RequestInit> {
     const spin = new ClientOAuth2({
-      clientId: this.spinnakerConfig.getString("auth.clientId"),
-      clientSecret: this.spinnakerConfig.getString("auth.clientSecret"),
-      accessTokenUri: this.spinnakerConfig.getString("auth.tokenUrl"),
-      authorizationUri: this.spinnakerConfig.getString("auth.authUrl"),
-      scopes: this.spinnakerConfig.getStringArray("auth.scopes"),
+      clientId: this.spinnakerConfig.getString("auth.oauth2.clientId"),
+      clientSecret: this.spinnakerConfig.getString("auth.oauth2.clientSecret"),
+      accessTokenUri: this.spinnakerConfig.getString("auth.oauth2.tokenUrl"),
+      authorizationUri: this.spinnakerConfig.getString("auth.oauth2.authUrl"),
+      scopes: this.spinnakerConfig.getStringArray("auth.oauth2.scopes"),
     });
     console.log(spin);
     const token = spin.code.getToken(url);
