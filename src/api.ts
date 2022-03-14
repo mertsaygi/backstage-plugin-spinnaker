@@ -1,7 +1,7 @@
 import { Pipeline } from './types';
 import { Config } from '@backstage/config';
 import { createApiRef } from '@backstage/core-plugin-api';
-import { ClientOAuth2 } from "client-oauth2";
+import ClientOAuth2  from 'client-oauth2';
 
 export const spinnakerApiRef = createApiRef<Spinnaker>({
   id: 'plugin.spinnaker.service',
@@ -39,7 +39,7 @@ export class SpinnakerApi implements Spinnaker {
   }
 
   private async fetch<T = any>(input: string, init?: RequestInit): Promise<T> {
-    const authedInit = await this.addAuthHeaders(init || {});
+    const authedInit = await this.addAuthHeaders(input, init || {});
 
     const resp = await fetch(`${input}`, authedInit);
     if (!resp.ok) {
@@ -55,7 +55,7 @@ export class SpinnakerApi implements Spinnaker {
     return response.data;
   }
 
-  private async addAuthHeaders(init: RequestInit): Promise<RequestInit> {
+  private async addAuthHeaders(url: string, init: RequestInit): Promise<RequestInit> {
     const spin = new ClientOAuth2({
       clientId: this.spinnakerConfig.getString("auth.clientId"),
       clientSecret: this.spinnakerConfig.getString("auth.clientSecret"),
@@ -64,7 +64,7 @@ export class SpinnakerApi implements Spinnaker {
       scopes: this.spinnakerConfig.getStringArray("auth.scopes"),
     });
     console.log(spin);
-    const token = spin.code.getToken();
+    const token = spin.code.getToken(url);
     const headers = init.headers || {'Content-Type': 'application/json'};
 
     return {
