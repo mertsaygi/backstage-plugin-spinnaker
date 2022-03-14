@@ -1,6 +1,7 @@
 import { Pipeline } from './types';
 import { Config } from '@backstage/config';
 import { createApiRef } from '@backstage/core-plugin-api';
+import { ClientOAuth2 } from "client-oauth2";
 
 export const spinnakerApiRef = createApiRef<Spinnaker>({
   id: 'plugin.spinnaker.service',
@@ -44,25 +45,33 @@ export class SpinnakerApi implements Spinnaker {
     if (!resp.ok) {
       throw new Error(`Request failed with ${resp.status} ${resp.statusText}`);
     }
+    console.log(resp.json());
     return await resp.json();
   }
 
   async getApplicationPipelines(opts: PipelinesFetchOpts): Promise<Pipeline[]> {
     const limit = opts?.limit || 50;
-    console.log(this.spinnakerConfig);
     const response = await this.fetch<PipelinesResponse>(`/applications/${opts.applicationName}/pipelines?expand=true&limit=${limit}&statuses=RUNNING,SUSPENDED,PAUSED,NOT_STARTED`);
     return response.data;
   }
 
   private async addAuthHeaders(init: RequestInit): Promise<RequestInit> {
-    const token = "";
+    const spin = new ClientOAuth2({
+      clientId: this.spinnakerConfig.getString("auth.clientId"),
+      clientSecret: this.spinnakerConfig.getString("auth.clientSecret"),
+      accessTokenUri: this.spinnakerConfig.getString("auth.tokenUrl"),
+      authorizationUri: this.spinnakerConfig.getString("auth.authUrl"),
+      scopes: this.spinnakerConfig.getStringArray("auth.scopes"),
+    });
+    console.log(spin);
+    const token = spin.code.getToken();
     const headers = init.headers || {'Content-Type': 'application/json'};
 
     return {
       ...init,
       headers: {
         ...headers,
-        ...(token ? { Authorization: `Basic ${token}` } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       }
     };
   }
