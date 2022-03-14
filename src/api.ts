@@ -57,9 +57,7 @@ export class SpinnakerApi implements Spinnaker {
     return response.data;
   }
 
-  private async addAuthHeaders(
-    init: RequestInit
-  ): Promise<RequestInit> {
+  private async addAuthHeaders(init: RequestInit): Promise<RequestInit> {
     const spin = new ClientOAuth2({
       clientId: this.spinnakerConfig.getString("auth.oauth2.clientId"),
       clientSecret: this.spinnakerConfig.getString("auth.oauth2.clientSecret"),
@@ -73,7 +71,12 @@ export class SpinnakerApi implements Spinnaker {
       "Bearer",
       {}
     );
-    const headers = init.headers || { "Content-Type": "application/json" };
+    const headers = init.headers || {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    };
 
     return {
       ...init,
