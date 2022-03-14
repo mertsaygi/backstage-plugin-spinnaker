@@ -39,9 +39,9 @@ export class SpinnakerApi implements Spinnaker {
   }
 
   private async fetch<T = any>(input: string, init?: RequestInit): Promise<T> {
-    const authedInit = await this.addAuthHeaders(input, init || {});
-
-    const resp = await fetch(`${input}`, authedInit);
+    const target = this.spinnakerConfig.getString("target");
+    const authedInit = await this.addAuthHeaders(target+input, init || {});
+    const resp = await fetch(`${target}${input}`, authedInit);
     if (!resp.ok) {
       throw new Error(`Request failed with ${resp.status} ${resp.statusText}`);
     }
