@@ -30,6 +30,8 @@ export interface Config {
                 /** @visibility frontend */
                 tokenUrl?: string;  
                 /** @visibility frontend */
+                redirectUri?: string;  
+                /** @visibility frontend */
                 scopes?: string[];  
             };
         };
