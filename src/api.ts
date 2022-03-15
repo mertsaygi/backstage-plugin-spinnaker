@@ -73,7 +73,6 @@ export class SpinnakerApi implements Spinnaker {
     );
     const headers = init.headers || {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
     };
 
     return {
