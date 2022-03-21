@@ -1,6 +1,6 @@
 import { Pipeline } from "./types";
 import { Config } from "@backstage/config";
-import { identityApiRef, useApi, createApiRef, IdentityApi } from '@backstage/core-plugin-api';
+import { createApiRef, IdentityApi } from '@backstage/core-plugin-api';
 
 export const spinnakerApiRef = createApiRef<Spinnaker>({
   id: "plugin.spinnaker.service",
