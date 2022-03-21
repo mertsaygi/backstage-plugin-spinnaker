@@ -14,8 +14,9 @@ export const spinnakerPlugin = createPlugin({
     createApiFactory({
       api: spinnakerApiRef,
       deps: { discoveryApi: discoveryApiRef, identityApi: identityApiRef, configApi: configApiRef },
-      factory: ({ configApi }) => {
+      factory: ({ configApi, identityApi }) => {
         return new SpinnakerApi({ 
+          identityApi: identityApi,
           spinnakerConfig: configApi.getConfig('spinnaker'), 
         });
       },

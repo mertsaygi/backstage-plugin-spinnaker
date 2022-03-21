@@ -1,6 +1,6 @@
 import { Pipeline } from "./types";
 import { Config } from "@backstage/config";
-import { identityApiRef, useApi, createApiRef } from '@backstage/core-plugin-api';
+import { identityApiRef, useApi, createApiRef, IdentityApi } from '@backstage/core-plugin-api';
 
 export const spinnakerApiRef = createApiRef<Spinnaker>({
   id: "plugin.spinnaker.service",
@@ -23,6 +23,7 @@ interface PipelinesResponse {
 }
 
 type Options = {
+  identityApi: IdentityApi,
   spinnakerConfig: Config;
 };
 
@@ -30,10 +31,12 @@ type Options = {
  * API to talk to Spinnaker.
  */
 export class SpinnakerApi implements Spinnaker {
+  private readonly identityApi: IdentityApi;
   private readonly spinnakerConfig: Config;
 
   constructor(opts: Options) {
     this.spinnakerConfig = opts.spinnakerConfig;
+    this.identityApi = opts.identityApi;
     console.log(this.spinnakerConfig);
   }
 
@@ -57,8 +60,7 @@ export class SpinnakerApi implements Spinnaker {
   }
 
   private async addAuthHeaders(init: RequestInit): Promise<RequestInit> {
-    const identityApi = useApi(identityApiRef);
-    const token = identityApi.getIdToken();
+    const token = this.identityApi.getIdToken();
     const headers = init.headers || {
       "Content-Type": "application/json",
     };
