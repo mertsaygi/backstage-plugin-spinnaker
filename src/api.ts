@@ -1,7 +1,6 @@
 import { Pipeline } from "./types";
 import { Config } from "@backstage/config";
-import { createApiRef } from "@backstage/core-plugin-api";
-import ClientOAuth2 from "client-oauth2";
+import { identityApiRef, useApi, createApiRef } from '@backstage/core-plugin-api';
 
 export const spinnakerApiRef = createApiRef<Spinnaker>({
   id: "plugin.spinnaker.service",
@@ -58,19 +57,8 @@ export class SpinnakerApi implements Spinnaker {
   }
 
   private async addAuthHeaders(init: RequestInit): Promise<RequestInit> {
-    const spin = new ClientOAuth2({
-      clientId: this.spinnakerConfig.getString("auth.oauth2.clientId"),
-      clientSecret: this.spinnakerConfig.getString("auth.oauth2.clientSecret"),
-      accessTokenUri: this.spinnakerConfig.getString("auth.oauth2.tokenUrl"),
-      authorizationUri: this.spinnakerConfig.getString("auth.oauth2.authUrl"),
-      scopes: ["profile", "email"],
-    });
-    const token = spin.createToken(
-      this.spinnakerConfig.getString("auth.oauth2.accessToken"),
-      this.spinnakerConfig.getString("auth.oauth2.refreshToken"),
-      "Bearer",
-      {}
-    );
+    const identityApi = useApi(identityApiRef);
+    const token = identityApi.getIdToken();
     const headers = init.headers || {
       "Content-Type": "application/json",
     };
@@ -79,7 +67,7 @@ export class SpinnakerApi implements Spinnaker {
       ...init,
       headers: {
         ...headers,
-        ...(token ? { Authorization: `Bearer ${token.accessToken}` } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     };
   }
