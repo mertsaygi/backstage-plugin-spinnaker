@@ -60,7 +60,7 @@ export class SpinnakerApi implements Spinnaker {
   }
 
   private async addAuthHeaders(init: RequestInit): Promise<RequestInit> {
-    const token = this.identityApi.getIdToken();
+    const token = await this.identityApi.getIdToken();
     const headers = init.headers || {
       "Content-Type": "application/json",
     };
